@@ -1,0 +1,58 @@
+{% include 'header.html' %}
+
+    <div>
+    <div class="text-center">
+        <h1>Error</h1>
+        <p>{{ name }} has not played enough matches for a statistical review</p>
+    </div>
+    </div>
+
+    <div class="row">
+        <div class="container col-1"></div>
+        <div class="container text-center text-white pt-5 pb-5 my-5 col border border-primary bg-dark col">
+            <p class="h5">Back to Home Page</p>
+            <form action = "{% url 'home' %}" method = "POST">
+                {% csrf_token %}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="container col-1"></div>
+        <div class="container text-center text-white pt-5 pb-5 my-5 col border border-primary bg-dark col">
+            <p class="h5">Evaluate All Players</p>
+            <form action = "{% url 'all_players' %}" method = "POST">
+                {% csrf_token %}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+        <div class="container col-1"></div>
+        <div class="container text-center text-white pt-5 pb-5 my-5 col border border-primary bg-dark col">
+            <p class="h5">Evaluate Different Player</p>
+                <div class="col">
+            <form method="get">
+                  {{ form.player.label_tag }}
+                  {{ form.player }}
+                  <button type="submit">Submit</button>
+                </form>
+            <script>
+                  $(function () {
+                    $("#player_select").select2({
+                      placeholder: "Search player…",
+                      width: "30%",
+                      ajax: {
+                        url: "{% url 'player_search' %}",
+                        dataType: "json",
+                        delay: 150,
+                        data: params => ({ search: params.term || "" }),
+                        processResults: data => ({ results: data.results })
+                      },
+                      minimumInputLength: 1,
+                      allowClear: true
+                    });
+                  });
+                </script>
+        </div>
+        </div>
+        <div class="container col-1"></div>
+    </div>
+
+{% include 'footer.html' %}

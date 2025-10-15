@@ -1,0 +1,44 @@
+{% include 'header.html' %}
+
+{% include 'navbar.html' %}
+
+<h1 class="container-lg text-center pt-5">Tennis Machine Learning Model: How Serving Metrics Affect Win Percentages</h1>
+
+<div class="container text-center pt-5">
+    <h2>Would you like to analyze all ATP matches from 2020-2025 or select a player to analyze?</h2>
+</div>
+
+<div class="container text-center row pt-5">
+    <div class="col">
+        <form action="{% url 'all_players' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" name="all" value="all">All Matches</button>
+    </form>
+    </div>
+    <div class="col">
+        <form method="get">
+              {{ form.player.label_tag }}
+              {{ form.player }}
+              <button type="submit">Submit</button>
+            </form>
+        <script>
+              $(function () {
+                $("#player_select").select2({
+                  placeholder: "Search player…",
+                  width: "30%",
+                  ajax: {
+                    url: "{% url 'player_search' %}",
+                    dataType: "json",
+                    delay: 150,
+                    data: params => ({ search: params.term || "" }),
+                    processResults: data => ({ results: data.results })
+                  },
+                  minimumInputLength: 1,
+                  allowClear: true
+                });
+              });
+            </script>
+    </div>
+</div>
+
+{% include 'footer.html' %}

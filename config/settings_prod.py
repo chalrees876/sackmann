@@ -30,36 +30,3 @@ DATABASES = {
         "PORT": os.getenv("DB_PORT"),
     }
 }
-
-# Make sure logs go to ~/tennisapp/logs
-from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent.parent
-LOG_DIR = BASE_DIR.parent / "logs"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
-        },
-    },
-    "handlers": {
-        "app_file": {
-            "class": "logging.FileHandler",
-            "filename": str(LOG_DIR / "django.log"),
-            "formatter": "verbose",
-        },
-    },
-    "loggers": {
-        # your custom logger used by views
-        "tennis": {"handlers": ["app_file"], "level": "INFO", "propagate": False},
-
-        # CRITICAL: log 500s/tracebacks raised by views/middleware
-        "django.request": {"handlers": ["app_file"], "level": "ERROR", "propagate": False},
-
-        # Optional: DB errors
-        "django.db.backends": {"handlers": ["app_file"], "level": "ERROR", "propagate": False},
-    },
-}

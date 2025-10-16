@@ -1,5 +1,23 @@
 {% include "header.html" %}
-{% include "navbar.html" %}
+
+<nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
+  <div class="container">
+    <a class="navbar-brand fw-semibold" href="{% url 'home' %}">Tennis ML</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div id="mainNav" class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'all_players' %}">Evaluate All Players</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://github.com/chalrees876/sackmann" target="_blank" rel="noopener">GitHub</a></li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
 
 <main class="container" style="padding-top: 4.5rem;">
   <section class="py-5">

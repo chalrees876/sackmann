@@ -1,15 +1,31 @@
 <nav class="navbar navbar-expand-lg bg-white border-bottom fixed-top">
-  <div class="container">
+  <div class="container text-center">
     <a class="navbar-brand fw-semibold" href="{% url 'home' %}">Tennis ML</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div id="mainNav" class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'all_players' %}">Model Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link" href="https://github.com/chalrees876/sackmann" target="_blank" rel="noopener">GitHub</a></li>
+        <li class="nav-item "><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item -brand"><a class="nav-link" href="{% url 'about' %}">About</a></li>
+        <li class="nav-item "><a class="nav-link" href="{% url 'all_players' %}">Evaluate All Players</a></li>
+          <li class="nav-item text-muted">
+          <div class="card-body">
+            <form id="playerSearchForm" class="mb-3" onsubmit="return false;">
+              <div class="position-relative">
+                  <div class="input-group">
+                    <input id="playerSearchInput" class="form-control" type="text" placeholder="Search Player...">
+                  </div>
+                  <!-- dropdown container -->
+                  <div id="searchResults" class="list-group position-absolute w-100 shadow-sm"
+                       style="display:none; z-index:1000; top:100%; left:0;"></div>
+                </div>
+                <small id="searchMessage" class="text-muted"></small>
+            </form>
+          </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="https://github.com/chalrees876/sackmann" target="_blank" rel="noopener">GitHub</a></li>
+
       </ul>
     </div>
   </div>

@@ -65,7 +65,7 @@ def all_players(request):
                 'db': pipeline.get('db64'),
             })
 
-        return render(request, 'ml_results.html', context=context)
+        return render(request, 'results.html', context=context)
 
     except Exception:
         logger.exception('all_players failed')
@@ -113,11 +113,7 @@ def single_player(request, pk):
             'form': form,
             'player_matches': ten_player_matches,
         }
-
-        if name:
-            return render(request, 'player_result.html', context=context)
-        else:
-            return render(request, 'ml_results.html', context=context)
+        return render(request, 'results.html', context=context)
     else:
         return render(request, 'error.html', context={'name': name})
 

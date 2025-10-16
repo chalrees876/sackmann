@@ -2,92 +2,98 @@
 {% include "navbar.html" %}
 
 <main class="container" style="padding-top: 4.5rem;">
+        {% if player %}
+    <h1 class="text-center">Results for {{ player }}</h1>
+    {% else %}
+    <h1 class="text-center">Model Results for All Players</h1>
+    {% endif %}
   <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
-    <h1 class="h4 fw-bold mb-0">{{ player.name }}</h1>
-    <form method="get" class="d-flex">
-      {{ form.player }}&nbsp;
-      <button class="btn btn-outline-primary" type="submit">Switch Player</button>
-    </form>
   </div>
+ <div class="row g-3">
 
-  {% if player_matches %}
-    <div class="card mb-3">
-      <div class="card-header">Recent Matches</div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-sm mb-0 align-middle">
-            <thead class="table-light">
-              <tr><th>Match</th><th>Match ID</th></tr>
-            </thead>
-            <tbody>
-              {% for m in player_matches %}
-              <tr>
-                <td>{{ m.player1.name }} vs {{ m.player2.name }}</td>
-                <td>{{ m.match_id }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+     {% if scatter %}
+      <div class="col-md-12">
+        <div class="card h-100">
+          <div class="card-header">Train/Test Scatter</div>
+          <div class="card-body text-center">
+            <img class="img-fluid" alt="Scatter" src="data:image/png;base64,{{ scatter }}">
+          </div>
         </div>
       </div>
-    </div>
-  {% endif %}
-
-  <!-- Same visual blocks as ml_results.html; they’ll render only if present -->
-  <div class="row g-3">
-    {% if heatmap %}
-      <div class="col-md-6"><div class="card h-100">
-        <div class="card-header">Confusion Matrix (heatmap)</div>
-        <div class="card-body text-center">
-          <img class="img-fluid" src="data:image/png;base64,{{ heatmap }}" alt="Confusion Matrix Heatmap">
-        </div>
-      </div></div>
     {% endif %}
 
-    {% if auc %}
-      <div class="col-md-6"><div class="card h-100">
-        <div class="card-header">ROC / AUC</div>
-        <div class="card-body text-center">
-          <img class="img-fluid" src="data:image/png;base64,{{ auc }}" alt="AUC">
+         {% if fs_sigmoid %}
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header">First Serve % — Sigmoid</div>
+          <div class="card-body text-center">
+            <img class="img-fluid" alt="First Serve Sigmoid" src="data:image/png;base64,{{ fs_sigmoid }}">
+          </div>
         </div>
-      </div></div>
-    {% endif %}
-
-    {% if scatter %}
-      <div class="col-md-6"><div class="card h-100">
-        <div class="card-header">Train/Test Scatter</div>
-        <div class="card-body text-center">
-          <img class="img-fluid" src="data:image/png;base64,{{ scatter }}" alt="Scatter">
-        </div>
-      </div></div>
-    {% endif %}
-
-    {% if fs_sigmoid %}
-      <div class="col-md-6"><div class="card h-100">
-        <div class="card-header">First Serve % — Sigmoid</div>
-        <div class="card-body text-center">
-          <img class="img-fluid" src="data:image/png;base64,{{ fs_sigmoid }}" alt="First Serve Sigmoid">
-        </div>
-      </div></div>
+      </div>
     {% endif %}
 
     {% if df_sigmoid %}
-      <div class="col-md-6"><div class="card h-100">
-        <div class="card-header">Double Faults — Sigmoid</div>
-        <div class="card-body text-center">
-          <img class="img-fluid" src="data:image/png;base64,{{ df_sigmoid }}" alt="Double Faults Sigmoid">
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header">Double Faults — Sigmoid</div>
+          <div class="card-body text-center">
+            <img class="img-fluid" alt="Double Faults Sigmoid" src="data:image/png;base64,{{ df_sigmoid }}">
+          </div>
         </div>
-      </div></div>
+      </div>
     {% endif %}
 
-    {% if db %}
-      <div class="col-12"><div class="card h-100">
-        <div class="card-header">Decision Boundary</div>
-        <div class="card-body text-center">
-          <img class="img-fluid" src="data:image/png;base64,{{ db }}" alt="Decision Boundary">
+
+        {% if db %}
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header">Decision Boundary</div>
+          <div class="card-body text-center">
+            <img class="img-fluid" alt="Decision Boundary" src="data:image/png;base64,{{ db }}">
+          </div>
         </div>
-      </div></div>
+      </div>
     {% endif %}
+
+  {% if cr %}
+    <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header">Classification Report</div>
+          <div class="card-body">
+            <pre class="mb-0 small">{{ cr }}</pre>
+          </div>
+        </div>
+    </div>
+  {% endif %}
+
+
+    {% if heatmap %}
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header">Confusion Matrix (heatmap)</div>
+          <div class="card-body text-center">
+            <img class="img-fluid" alt="Confusion Matrix Heatmap" src="data:image/png;base64,{{ heatmap }}">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if auc %}
+      <div class="col-md-6">
+        <div class="card h-100">
+          <div class="card-header">ROC / AUC</div>
+          <div class="card-body text-center">
+            <img class="img-fluid" alt="AUC" src="data:image/png;base64,{{ auc }}">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+
+
+
+
   </div>
 </main>
 

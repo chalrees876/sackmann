@@ -1,35 +1,179 @@
 {% include "header.html" %}
 {% include "navbar.html" %}
 
-<main class="container py-5" style="padding-top: 4.5rem;">
+<main class="container py-5" style="padding-top:4.5rem;">
   <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow-sm border-0">
+    <div class="col-md-9">
+      <!-- Hero -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4 d-flex align-items-center gap-3">
+          <div>
+            <h1 class="h4 fw-bold mb-1">About This Project</h1>
+            <p class="text-muted small mb-0">
+              Django • Python • scikit-learn • PostgreSQL • AWS EC2 • Bootstrap
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overview -->
+      <div class="card shadow-sm border-0 mb-4">
         <div class="card-body p-4">
-          <h1 class="h4 fw-bold mb-3">About This Project</h1>
           <p>
-            This web app was built as a personal data science and software engineering project.
-            It uses match statistics from professional tennis players to train a
-            <strong>logistic regression model</strong> that predicts match outcomes
-            based on serving performance metrics.
+            <strong>Tennis ML</strong> is a web application that predicts professional tennis match outcomes using
+            logistic regression trained on serving statistics. It was built end-to-end as a demonstration of
+            full-stack development, machine-learning integration, and AWS deployment.
           </p>
           <p>
-            The application is built with <strong>Django</strong> on the backend
-            and <strong>Bootstrap</strong> for styling. It includes:
+            The project was developed from scratch with:
           </p>
           <ul>
-            <li>A searchable database of players and matches.</li>
-            <li>Filterable visualizations showing model performance.</li>
-            <li>Machine learning pipelines implemented with
-              <code>pyspark</code> and <code>scikit-learn</code> and <code>pandas</code>.
+            <li><strong>Django</strong> for backend and ORM-based database management</li>
+            <li><strong>PostgreSQL</strong> for structured match, player, and tournament data</li>
+            <li><strong>scikit-learn</strong>, <strong>pandas</strong>, and <strong>matplotlib</strong> for model training and visualization</li>
+            <li><strong>Bootstrap</strong> for front-end responsiveness</li>
+            <li><strong>Gunicorn + Nginx</strong> on <strong>AWS EC2</strong> for deployment</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Database structure -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white fw-semibold">Database & Models</div>
+        <div class="card-body p-4">
+          <p>
+            The app uses three main Django models, each persisted in PostgreSQL:
+          </p>
+          <ul>
+            <li>
+              <strong>Player</strong> – Stores player metadata (name, gender).
+              Used as a foreign key in <code>Match</code> for player1 and player2 relations.
+            </li>
+            <li>
+              <strong>Tournament</strong> – Represents an ATP or WTA event (name, surface, year).
+              Allows grouping and filtering of matches.
+            </li>
+            <li>
+              <strong>Match</strong> – Core table containing match-level statistics:
+              <ul>
+                <li>Serving performance (<code>p1_first_serve_pctg</code>, <code>p2_double_faults</code>)</li>
+                <li>Winners/losers linked to <code>Player</code></li>
+                <li>Foreign keys to <code>Tournament</code></li>
+              </ul>
             </li>
           </ul>
-          <p>
-            This project was developed by <strong>Christopher McKenzie</strong>
-            as part of his portfolio in Computer Science and Machine Learning.
-            You can explore more projects on
-            <a href="https://github.com/chalrees876" target="_blank">GitHub</a>.
+          <p class="mb-0">
+            This structure enables efficient queries like “fetch all matches where Player = Serena Williams” or “aggregate first-serve percentages by surface type”.
           </p>
+        </div>
+      </div>
+
+      <!-- Machine learning pipeline -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white fw-semibold">Machine Learning Pipeline</div>
+        <div class="card-body p-4">
+          <p>
+            The <code>run_pipeline()</code> function extracts match data via Django’s ORM, cleans it into a <code>pandas DataFrame</code>,
+            and runs a logistic regression using <code>scikit-learn</code>.
+            The model learns the relationship between serve accuracy and match outcome (win/loss).
+          </p>
+<pre class="small mb-3"><code># Simplified pipeline flow
+df = pd.DataFrame(Match.objects.values(...))
+X = df[["p1_first_serve_pctg", "p1_double_faults"]]
+y = df["is_winner"]
+logreg = LogisticRegression().fit(X, y)
+</code></pre>
+          <p>
+            The model’s outputs – accuracy, confusion matrix, ROC-AUC, and sigmoid curves – are rendered dynamically as base64-encoded matplotlib plots.
+          </p>
+        </div>
+      </div>
+
+        <!-- Model Evaluation Visuals -->
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-header bg-white fw-semibold">Model Evaluation & Visualizations</div>
+  <div class="card-body p-4">
+    <p>
+      After training, the model’s performance is evaluated using several standard classification metrics.
+      Each plot displayed in the app corresponds to a different way of interpreting model behavior:
+    </p>
+
+    <ul class="mb-0">
+
+        <li class="mt-2">
+        <strong>Scatter Plot:</strong>
+        Shows training and test data points in the same feature space.
+        It helps confirm that both sets are distributed similarly and that the model generalizes beyond training data.
+      </li>
+
+        <li class="mt-2">
+        <strong>Sigmoid Curves:</strong>
+        These illustrate the logistic regression’s probability outputs.
+        One curve shows how <em>first-serve percentage</em> affects win probability; another shows how
+        <em>double faults</em> reduce win probability.
+        The S-shape reflects that changes near the center of the curve have the biggest impact on prediction.
+      </li>
+
+              <li class="mt-2">
+        <strong>Decision Boundary Plot:</strong>
+        Visualizes how the model separates wins and losses in the feature space of
+        <em>first-serve %</em> vs <em>double faults</em>.
+        The shaded probability regions (blue to red) and contour lines mark transition zones where predictions shift.
+      </li>
+
+      <li class="mt-2">
+        <strong>Classification Report:</strong>
+        Lists key metrics including precision, recall, and F1-score for both classes (“win” and “loss”).
+        It summarizes overall accuracy and helps gauge whether the model favors one outcome over the other.
+      </li>
+
+      <li>
+        <strong>Confusion Matrix:</strong>
+        Shows how many matches were correctly or incorrectly predicted as wins or losses.
+        The diagonal cells represent correct predictions; off-diagonals show misclassifications.
+        A balanced matrix (strong diagonal) means the model distinguishes wins and losses well.
+      </li>
+
+
+      <li class="mt-2">
+        <strong>ROC / AUC Curve:</strong>
+        Plots the trade-off between true positive and false positive rates at different thresholds.
+        The <em>AUC</em> (Area Under the Curve) measures model separability — closer to 1.0 means better distinction
+        between winners and losers.
+      </li>
+
+
+    </ul>
+  </div>
+</div>
+
+
+      <!-- Deployment -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white fw-semibold">Deployment & Architecture</div>
+        <div class="card-body p-4">
+          <ul>
+            <li><strong>Gunicorn</strong> runs Django as a WSGI server on port 8000</li>
+            <li><strong>Nginx</strong> proxies traffic from <code>tennisml.duckdns.org</code> to Gunicorn</li>
+            <li>Environment variables are loaded from <code>.env</code> for security</li>
+            <li>Static assets served via Nginx after <code>collectstatic</code></li>
+          </ul>
+          <p class="mb-0">
+            This mirrors a real-world production setup with separation of concerns and reliable service management using <code>systemd</code>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Credits -->
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-start">
+          <div class="text-muted">
+            Developed by <strong>Christopher McKenzie</strong> to demonstrate full-stack ML deployment skills as a Computer Science student.
+          </div>
+          <a class="btn btn-outline-primary mt-3 mt-md-0"
+             href="https://github.com/chalrees876/sackmann" target="_blank" rel="noopener">
+            View Source on GitHub
+          </a>
         </div>
       </div>
     </div>

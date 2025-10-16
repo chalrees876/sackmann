@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls.base import reverse
 from django.http import HttpResponseServerError
-from djang.db.models import Q
+from django.db.models import Q
 from .models import Player, Tournament, Match, MatchForm
 from .ml.training import run_pipeline
 import logging

@@ -1,2 +1,67 @@
+<footer class="border-top mt-5">
+  <div class="container py-4 small text-muted d-flex flex-column flex-md-row justify-content-between">
+    <div>© {{ now|date:"Y" }} Tennis ML - All data is from <a href="https://github.com/JeffSackmann/tennis_MatchChartingProject">Here</a></div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const input = document.getElementById("playerSearchInput");
+  const results = document.getElementById("searchResults");
+  const clearBtn = document.getElementById("clearSearch");
+  const message = document.getElementById("searchMessage");
+
+  if (!input || !results) return;
+
+  function hideResults() {
+    results.style.display = "none";
+    results.innerHTML = "";
+  }
+
+  function render(items) {
+    results.innerHTML = "";
+    if (!items || items.length === 0) { hideResults(); return; }
+    items.forEach(p => {
+      const a = document.createElement("a");
+      a.className = "list-group-item list-group-item-action";
+      a.href = p.url;
+      a.textContent = p.text;
+      results.appendChild(a);
+    });
+    results.style.display = "block";
+  }
+
+  function search(q) {
+    if (q.length < 2) { hideResults(); message.textContent = ""; return; }
+    fetch(`/search/?search=${encodeURIComponent(q)}`)
+      .then(r => r.json())
+      .then(data => render(data.results || []))
+      .catch(() => hideResults());
+  }
+
+  input.addEventListener("input", () => search(input.value.trim()));
+
+  // Basic keyboard support: Enter goes to first result
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const first = results.querySelector("a.list-group-item");
+      if (first) { window.location = first.href; e.preventDefault(); }
+    } else if (e.key === "Escape") {
+      hideResults();
+    }
+  });
+
+  document.addEventListener("click", e => {
+    if (!results.contains(e.target) && e.target !== input) hideResults();
+  });
+
+  clearBtn?.addEventListener("click", () => {
+    input.value = "";
+    hideResults();
+    input.focus();
+  });
+});
+</script>
+
 </body>
 </html>

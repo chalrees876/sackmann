@@ -129,3 +129,6 @@ def player_search(request):
     return JsonResponse({
         'results': [{'id': p.id, 'text': p.name, 'url': reverse('single_player', kwargs={'pk': p.id})} for p in qs]
     })
+
+def about(request):
+    return render(request, 'about.html')

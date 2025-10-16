@@ -1,0 +1,39 @@
+{% include "header.html" %}
+{% include "navbar.html" %}
+
+<main class="container py-5" style="padding-top: 4.5rem;">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h1 class="h4 fw-bold mb-3">About This Project</h1>
+          <p>
+            This web app was built as a personal data science and software engineering project.
+            It uses match statistics from professional tennis players to train a
+            <strong>logistic regression model</strong> that predicts match outcomes
+            based on serving performance metrics.
+          </p>
+          <p>
+            The application is built with <strong>Django</strong> on the backend
+            and <strong>Bootstrap</strong> for styling. It includes:
+          </p>
+          <ul>
+            <li>A searchable database of players and matches.</li>
+            <li>Filterable visualizations showing model performance.</li>
+            <li>Machine learning pipelines implemented with
+              <code>pyspark</code> and <code>scikit-learn</code> and <code>pandas</code>.
+            </li>
+          </ul>
+          <p>
+            This project was developed by <strong>Christopher McKenzie</strong>
+            as part of his portfolio in Computer Science and Machine Learning.
+            You can explore more projects on
+            <a href="https://github.com/chalrees876" target="_blank">GitHub</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% include "footer.html" %}

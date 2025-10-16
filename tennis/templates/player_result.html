@@ -1,148 +1,94 @@
-{% include 'header.html' %}
+{% include "header.html" %}
+{% include "navbar.html" %}
 
-    <div class="container">
-        <h2 class="container text-center pt-5">Recent Results for {{ player.name }}</h2>
-        <table class="table table-sm table-bordered">
-            <thead class="thead-light">
-            <tr>
-                <th>Opponent</th>
-                <th>Tournament</th>
-                <th>Round</th>
-                <th>Result</th>
-                <th>First Serve %</th>
-                <th>Double Faults</th>
-            </tr>
+<main class="container" style="padding-top: 4.5rem;">
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <h1 class="h4 fw-bold mb-0">{{ player.name }}</h1>
+    <form method="get" class="d-flex">
+      {{ form.player }}&nbsp;
+      <button class="btn btn-outline-primary" type="submit">Switch Player</button>
+    </form>
+  </div>
+
+  {% if player_matches %}
+    <div class="card mb-3">
+      <div class="card-header">Recent Matches</div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-sm mb-0 align-middle">
+            <thead class="table-light">
+              <tr><th>Match</th><th>Match ID</th></tr>
             </thead>
             <tbody>
-            {% for match in player_matches %}
-                {% if match.winner.id == player.id %}
-                <tr class="table-success">
-                {% elif match.loser.id == player.id %}
-                <tr class="table-danger">
-                {% endif %}
-                    {% if match.player1.id == player.id %}
-                    <td>{{ match.player2.name }}</td>
-                    <td>{{ match.tournament }} {{ match.tournament.year }}</td>
-                    <td>{{ match.round }}</td>
-                        {% if match.winner.id == player.id %}
-                        <td>W</td>
-                        {% elif match.loser.id == player.id %}
-                        <td>L</td>
-                        {% endif %}
-                    <td>{{ match.p1_first_serve_pctg }}</td>
-                    <td>{{ match.p1_double_faults }}</td>
-                    {% elif match.player2.id == player.id %}
-                    <td>{{ match.player1 }}</td>
-                    <td>{{ match.tournament }} {{ match.tournament.year }}</td>
-                    <td>{{ match.round }}</td>
-                        {% if match.winner.id == player.id %}
-                        <td class="table-success">W</td>
-                        {% elif match.loser.id == player.id %}
-                        <td class="table-danger">L</td>
-                        {% endif %}
-                    <td>{{ match.p2_first_serve_pctg }}</td>
-                    <td>{{ match.p2_double_faults }}</td>
-                    {% endif %}
-            </tr>
-            {% endfor %}
-            {% for match in p2_matches %}
-            <tr>
-                <td>{{ match.player1 }}</td>
-                <td>{{ match.tournament }}</td>
-                {% if match.winner.name == player %}
-                <td>W</td>
-                {% elif match.loser.name == player %}
-                <td>L</td>
-                {% endif %}
-                <td>{{ match.p2_first_serve_pctg }}</td>
-                <td>{{ match.p2_double_faults }}</td>
-            </tr>
-            {% endfor %}
+              {% for m in player_matches %}
+              <tr>
+                <td>{{ m.player1.name }} vs {{ m.player2.name }}</td>
+                <td>{{ m.match_id }}</td>
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>Train/Test Scatter Plot</h3>
-            <img src="data:image/png;base64,{{ scatter }}" alt="Train/Test scatter" />
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>First Serve % Sigmoid</h3>
-            <img src="data:image/png;base64,{{ fs_sigmoid }}" alt="First Serve % Sigmoid scatter" />
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>Double Faults Sigmoid</h3>
-            <img src="data:image/png;base64,{{ df_sigmoid }}" alt="Double Fault Sigmoid scatter" />
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>Decision Boundary</h3>
-            <img src="data:image/png;base64,{{ db }}" alt="Decision Boundary scatter" />
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>Confusion Matrix</h3>
-            <img src="data:image/png;base64,{{ heatmap }}" alt="Confusion matrix" />
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>Classification Report</h3>
-            <pre style="white-space: pre-wrap">{{ cr }}</pre>
-    </div>
-
-    <div class="container text-center pt-5">
-        <h3>AUC Curve</h3>
-            <img src="data:image/png;base64,{{ auc }}" alt="ROC curve" />
-    </div>
-
-    <div class="row">
-        <div class="container col-1"></div>
-        <div class="container text-center text-white pt-5 pb-5 my-5 col border border-primary bg-dark col">
-            <p class="h5">Back to Home Page</p>
-            <form action = "{% url 'home' %}" method = "POST">
-                {% csrf_token %}
-                <button type="submit">Submit</button>
-            </form>
+          </table>
         </div>
-        <div class="container col-1"></div>
-        <div class="container text-center text-white pt-5 pb-5 my-5 col border border-primary bg-dark col">
-            <p class="h5">Evaluate All Players</p>
-            <form action = "{% url 'all_players' %}" method = "POST">
-                {% csrf_token %}
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-        <div class="container col-1"></div>
-        <div class="container text-center text-white pt-5 pb-5 my-5 col border border-primary bg-dark col">
-            <p class="h5">Evaluate Different Player</p>
-                <div class="col">
-            <form method="get">
-                  {{ form.player.label_tag }}
-                  {{ form.player }}
-                  <button type="submit">Submit</button>
-                </form>
-            <script>
-                  $(function () {
-                    $("#player_select").select2({
-                      placeholder: "Search player…",
-                      width: "30%",
-                      ajax: {
-                        url: "{% url 'player_search' %}",
-                        dataType: "json",
-                        delay: 150,
-                        data: params => ({ search: params.term || "" }),
-                        processResults: data => ({ results: data.results })
-                      },
-                      minimumInputLength: 1,
-                      allowClear: true
-                    });
-                  });
-                </script>
-        </div>
-        </div>
-        <div class="container col-1"></div>
+      </div>
     </div>
+  {% endif %}
 
-{% include 'footer.html' %}
+  <!-- Same visual blocks as ml_results.html; they’ll render only if present -->
+  <div class="row g-3">
+    {% if heatmap %}
+      <div class="col-md-6"><div class="card h-100">
+        <div class="card-header">Confusion Matrix (heatmap)</div>
+        <div class="card-body text-center">
+          <img class="img-fluid" src="data:image/png;base64,{{ heatmap }}" alt="Confusion Matrix Heatmap">
+        </div>
+      </div></div>
+    {% endif %}
+
+    {% if auc %}
+      <div class="col-md-6"><div class="card h-100">
+        <div class="card-header">ROC / AUC</div>
+        <div class="card-body text-center">
+          <img class="img-fluid" src="data:image/png;base64,{{ auc }}" alt="AUC">
+        </div>
+      </div></div>
+    {% endif %}
+
+    {% if scatter %}
+      <div class="col-md-6"><div class="card h-100">
+        <div class="card-header">Train/Test Scatter</div>
+        <div class="card-body text-center">
+          <img class="img-fluid" src="data:image/png;base64,{{ scatter }}" alt="Scatter">
+        </div>
+      </div></div>
+    {% endif %}
+
+    {% if fs_sigmoid %}
+      <div class="col-md-6"><div class="card h-100">
+        <div class="card-header">First Serve % — Sigmoid</div>
+        <div class="card-body text-center">
+          <img class="img-fluid" src="data:image/png;base64,{{ fs_sigmoid }}" alt="First Serve Sigmoid">
+        </div>
+      </div></div>
+    {% endif %}
+
+    {% if df_sigmoid %}
+      <div class="col-md-6"><div class="card h-100">
+        <div class="card-header">Double Faults — Sigmoid</div>
+        <div class="card-body text-center">
+          <img class="img-fluid" src="data:image/png;base64,{{ df_sigmoid }}" alt="Double Faults Sigmoid">
+        </div>
+      </div></div>
+    {% endif %}
+
+    {% if db %}
+      <div class="col-12"><div class="card h-100">
+        <div class="card-header">Decision Boundary</div>
+        <div class="card-body text-center">
+          <img class="img-fluid" src="data:image/png;base64,{{ db }}" alt="Decision Boundary">
+        </div>
+      </div></div>
+    {% endif %}
+  </div>
+</main>
+
+{% include "footer.html" %}

@@ -180,7 +180,7 @@ def run_pipeline(player=None):
     y_pred_proba = logreg.predict_proba(X_test)[:,1]
     fpr, tpr, _ = metrics.roc_curve(y_test, y_pred_proba)
     auc = metrics.roc_auc_score(y_test, y_pred_proba)
-    ax.plot(fpr, tpr, label='data 1, auc'+str(auc))
+    ax.plot(fpr, tpr, label=f'ROC AUC = {auc:.3f}')
     ax.legend(loc=4)
     auc_b64 = fig_to_base64(fig_auc)
 
